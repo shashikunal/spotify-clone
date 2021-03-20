@@ -1,5 +1,9 @@
 import React, { Component, Fragment } from "react";
+import firebase from "../../firebase";
 import "./auth.css";
+import { toast } from "react-toastify";
+import md5 from "md5";
+
 class Signup extends Component {
   state = {
     email: "",
@@ -14,17 +18,45 @@ class Signup extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault();
-    let { email, confirmEmail, password, profile, dob } = this.state;
-    console.log({ email, confirmEmail, password, profile, dob });
+    try {
+      let { email, confirmEmail, password, profile, dob, gender } = this.state;
+      let userData = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password);
+      //send verification email to user
+      userData.user.sendEmailVerification();
+      let message = `Verification email has been sent to ${email} please verify it`;
+      toast.success(message);
+      await userData.user.updateProfile({
+        displayName: profile,
+        photoURL: `http://www.gravatar.com/avatar/${md5(email)}?d=identicon`,
+      });
+      console.log(userData);
+      //store information into firebase realtime database
+      await firebase
+        .database()
+        .ref()
+        .child("users/" + userData.user.uid)
+        .set({
+          username: userData.user.displayName,
+          email: userData.user.email,
+          photoURL: userData.user.photoURL,
+          registrationDate: new Date().toLocaleDateString(),
+        });
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message);
+    }
   };
+
   render() {
     let { email, confirmEmail, password, profile, dob, gender } = this.state;
     return (
       <Fragment>
         <section id="authSection" className="col-md-4 mx-auto my-2 card">
-          <article className="card-body">
+          <articleb>
             <h4>Sign up with your email address</h4>
             <form onSubmit={this.handleSubmit}>
               <div className="form-group">
@@ -44,8 +76,8 @@ class Signup extends Component {
                 <input
                   type="email"
                   name="confirmEmail"
-                  onChange={this.handleChange}
                   value={confirmEmail}
+                  onChange={this.handleChange}
                   className="form-control"
                   placeholder="Enter your email again"
                 />
@@ -81,34 +113,34 @@ class Signup extends Component {
                 <input
                   type="datetime-local"
                   name="dob"
-                  onChange={this.handleChange}
                   value={dob}
+                  onChange={this.handleChange}
                   className="form-control"
                   placeholder="enter a profile name"
                 />
               </div>
               {/*------ends date of birth ---------*/}
-              <div className="form-group">
+              <div className="form-group" name="gender" value={gender}>
                 <label>What's your gender?</label>
                 <input
                   type="radio"
                   name="gender"
+                  value="male"
                   onChange={this.handleChange}
-                  value={gender}
                 />
                 Male
                 <input
                   type="radio"
                   name="gender"
+                  value="female"
                   onChange={this.handleChange}
-                  value={gender}
                 />
                 female
                 <input
                   type="radio"
                   name="gender"
+                  value="others"
                   onChange={this.handleChange}
-                  value={gender}
                 />
                 Non-binary
               </div>
@@ -132,7 +164,7 @@ class Signup extends Component {
                 <button className="btn btn-success btn-block">Sign up</button>
               </div>
             </form>
-          </article>
+          </articleb>
         </section>
       </Fragment>
     );

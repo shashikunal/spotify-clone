@@ -1,28 +1,11 @@
 import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
+const SpotifyMenus = props => {
+  console.log(props.user);
 
-const SpotifyMenus = () => {
+
   return (
-    <Fragment>
-      <nav>
-        <ul>
-          <li>
-            <a href="/"> premium</a>
-          </li>
-          <li>
-            <a href="/"> Support</a>
-          </li>
-          <li>
-            <a href="/"> Download</a>
-          </li>
-          <li>
-            <a href="/"> Signup</a>
-          </li>
-          <li>
-            <a href="/"> Login</a>
-          </li>
-        </ul>
-      </nav>
-    </Fragment>
+    
   );
 };
 

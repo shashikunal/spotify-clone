@@ -1,19 +1,44 @@
 import React, { Component, Fragment } from "react";
 import Signup from "./Components/AuthComponent/Signup";
 import SpotifyNavbar from "./Components/HeaderComponent/SpotifyNavbar";
-import SpotifySlider from "./Components/SliderComponent/SpotifySlider";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Home from "./Components/HomeComponent/Home";
+import SignIn from "./Components/AuthComponent/Signin";
+import PageNotFound from "./Components/PageNotFound/PageNotFound";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import firebase from "./firebase";
 class App extends Component {
-  state = {};
+  state = {
+    userInfo: "",
+  };
+
+  async componentDidMount() {
+    await firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ userInfo: user });
+      } else {
+        this.setState({ userInfo: "" });
+      }
+    });
+  }
+
   render() {
+    console.log(this.state.userInfo);
     return (
       <Fragment>
-        <header>
-          <SpotifyNavbar />
-        </header>
-        <main>
-          {/* <SpotifySlider /> */}
-          <Signup />
-        </main>
+        <Router>
+          <header>
+            <SpotifyNavbar user={this.state.userInfo} />
+          </header>
+          <ToastContainer />
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/signin" exact component={SignIn} />
+            <Route path="/signup" exact component={Signup} />
+            <Route path="*" component={PageNotFound} />
+          </Switch>
+        </Router>
       </Fragment>
     );
   }
