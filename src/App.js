@@ -8,6 +8,8 @@ import PageNotFound from "./Components/PageNotFound/PageNotFound";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import firebase from "./firebase";
+import PasswordReset from "./Components/AuthComponent/PasswordReset";
+import PhoneAuth from "./Components/AuthComponent/PhoneAuth";
 class App extends Component {
   state = {
     userInfo: "",
@@ -36,6 +38,8 @@ class App extends Component {
             <Route path="/" exact component={Home} />
             <Route path="/signin" exact component={SignIn} />
             <Route path="/signup" exact component={Signup} />
+            <Route path="/password-reset" exact component={PasswordReset} />
+            <Route path="/phone-auth" exact component={PhoneAuth} />
             <Route path="*" component={PageNotFound} />
           </Switch>
         </Router>

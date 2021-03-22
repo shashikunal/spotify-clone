@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { toast } from "react-toastify";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import firebase from "../../firebase";
 class SignIn extends Component {
   state = {
@@ -39,6 +39,26 @@ class SignIn extends Component {
         <section id="authSection" className="col-md-4 mx-auto my-2 card">
           <article className="card-body">
             <h4>To continue, log in to Spotify.</h4>
+            <p
+              style={{
+                padding: "10px",
+                width: "100%",
+                border: "1px solid #111",
+                borderRadius: "20px",
+                textAlign: "center",
+                margin: "10px auto",
+              }}
+            >
+              <Link
+                to="/phone-auth"
+                style={{
+                  textDecoration: "none",
+                  color: "#555",
+                }}
+              >
+                continue with Phone number
+              </Link>
+            </p>
             <form onSubmit={this.handleSubmit}>
               <div className="form-group">
                 <label htmlFor="email">Email address or username</label>
@@ -65,7 +85,7 @@ class SignIn extends Component {
               </div>
 
               <p>
-                <a href="/">Forgot a password</a>
+                <Link to="/password-reset">Forgot a password</Link>
               </p>
 
               <div className="form-group">

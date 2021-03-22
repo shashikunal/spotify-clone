@@ -18,6 +18,7 @@ class SpotifyNavbar extends Component {
   };
 
   render() {
+    let { displayName, email, photoURL } = this.props.user;
     let IsAnonymousUser = () => (
       <Fragment>
         <li>
@@ -29,11 +30,24 @@ class SpotifyNavbar extends Component {
       </Fragment>
     );
     let IsAuthenticatedUser = () => (
-      <li>
-        <button className="btn btn-primary" onClick={this.signOut}>
-          Logout
-        </button>
-      </li>
+      <Fragment>
+        <li>
+          <a href="/">{displayName}</a>
+        </li>
+        <li>
+          <a href="/">{email}</a>
+        </li>
+        <li>
+          <a href="/">
+            <img src={photoURL} alt={displayName} />
+          </a>
+        </li>
+        <li>
+          <a className="btn btn-primary" onClick={this.signOut}>
+            Logout
+          </a>
+        </li>
+      </Fragment>
     );
 
     return (
